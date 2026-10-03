@@ -1,0 +1,14 @@
+@model Forum.ViewModels.RegisterViewModel
+@{ ViewData["Title"] = "Регистрация"; }
+<section class="auth-panel">
+    <h1>Регистрация</h1><p>Создайте профиль участника форума.</p>
+    <form method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="validation"></div>
+        <label asp-for="UserName">Логин</label><input asp-for="UserName" /><span asp-validation-for="UserName"></span>
+        <label asp-for="Email">Email</label><input asp-for="Email" /><span asp-validation-for="Email"></span>
+        <label asp-for="Avatar">Аватар</label><input asp-for="Avatar" accept="image/jpeg,image/png,image/webp" /><span asp-validation-for="Avatar"></span>
+        <label asp-for="Password">Пароль</label><input asp-for="Password" /><small>Минимум 6 символов: заглавная, строчная буква и цифра.</small><span asp-validation-for="Password"></span>
+        <label asp-for="ConfirmPassword">Повторите пароль</label><input asp-for="ConfirmPassword" /><span asp-validation-for="ConfirmPassword"></span>
+        <button type="submit">Создать аккаунт</button>
+    </form>
+</section>

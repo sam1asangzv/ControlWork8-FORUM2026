@@ -1,0 +1,12 @@
+@model Forum.ViewModels.LoginViewModel
+@{ ViewData["Title"] = "Вход"; }
+<section class="auth-panel">
+    <h1>Вход</h1><p>Войдите, чтобы создавать темы и отвечать.</p>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="validation"></div>
+        <label asp-for="Login">Логин или email</label><input asp-for="Login" autofocus /><span asp-validation-for="Login"></span>
+        <label asp-for="Password">Пароль</label><input asp-for="Password" /><span asp-validation-for="Password"></span>
+        <button type="submit">Войти</button>
+    </form>
+    <a asp-action="Register">Нет аккаунта? Зарегистрироваться</a>
+</section>
