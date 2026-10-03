@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Forum.Data;
 using Forum.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -25,6 +28,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Account/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
+var keyFolder = Path.Combine(builder.Environment.ContentRootPath, "App_Data", "Keys");
+Directory.CreateDirectory(keyFolder);
+builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(keyFolder));
 
 var app = builder.Build();
 
@@ -39,6 +45,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
@@ -52,6 +59,6 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();
 }
-
+await SeedData.InitializeAsync(app.Services);
 
 app.Run();

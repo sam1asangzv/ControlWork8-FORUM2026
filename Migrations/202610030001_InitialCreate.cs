@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Forum.Data;
 
 #nullable disable
 namespace Forum.Migrations;
 
+[DbContext(typeof(AppDbContext))]
 [Migration("202610030001_InitialCreate")]
 public class InitialCreate : Migration
 {

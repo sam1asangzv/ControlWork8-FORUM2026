@@ -41,4 +41,18 @@ public class RepliesController(AppDbContext db) : Controller
             CurrentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
         });
     }
+
+    [Authorize, HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Vote(int replyId, int value)
+    {
+        if (value is not 1 and not -1) return BadRequest();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        if (!await db.Replies.AnyAsync(x => x.Id == replyId)) return NotFound();
+        var vote = await db.ReplyVotes.FindAsync(replyId, userId);
+        if (vote is null) db.ReplyVotes.Add(new ReplyVote { ReplyId = replyId, UserId = userId, Value = value });
+        else if (vote.Value == value) db.ReplyVotes.Remove(vote);
+        else vote.Value = value;
+        await db.SaveChangesAsync();
+        return Json(new { likes = await db.ReplyVotes.CountAsync(x => x.ReplyId == replyId && x.Value == 1), dislikes = await db.ReplyVotes.CountAsync(x => x.ReplyId == replyId && x.Value == -1) });
+    }
 }

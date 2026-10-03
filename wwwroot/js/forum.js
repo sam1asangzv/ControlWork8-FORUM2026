@@ -14,6 +14,19 @@
   }
 
   section.addEventListener('click', async event => {
+    const voteButton = event.target.closest('[data-vote]');
+    if (voteButton && !voteButton.disabled) {
+      const reply = voteButton.closest('.reply');
+      const token = form?.querySelector('[name="__RequestVerificationToken"]')?.value;
+      const body = new URLSearchParams({ replyId: reply.dataset.replyId, value: voteButton.dataset.vote, __RequestVerificationToken: token });
+      const response = await fetch('/Replies/Vote', { method: 'POST', body, headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+      if (response.ok) {
+        const data = await response.json();
+        reply.querySelector('[data-vote="1"] span').textContent = data.likes;
+        reply.querySelector('[data-vote="-1"] span').textContent = data.dislikes;
+      }
+      return;
+    }
     const link = event.target.closest('.reply-pages a');
     if (!link) return;
     event.preventDefault();
