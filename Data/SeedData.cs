@@ -11,7 +11,13 @@ public static class SeedData
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var users = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        if (await db.Users.AnyAsync()) return;
+        if (await db.Users.AnyAsync())
+        {
+            var demoUsers = await db.Users.Where(x => x.UserName == "anna_forum" || x.UserName == "timur_dev").ToListAsync();
+            foreach (var user in demoUsers) user.AvatarPath = "/images/default-avatar.svg";
+            await db.SaveChangesAsync();
+            return;
+        }
         var anna = new ApplicationUser { UserName = "anna_forum", Email = "anna@forum.local", AvatarPath = "/images/default-avatar.svg" };
         var timur = new ApplicationUser { UserName = "timur_dev", Email = "timur@forum.local", AvatarPath = "/images/default-avatar.svg" };
         await users.CreateAsync(anna, "Forum123"); await users.CreateAsync(timur, "Forum123");
