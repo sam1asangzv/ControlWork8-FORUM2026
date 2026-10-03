@@ -1,0 +1,7 @@
+@model Forum.ViewModels.TopicCreateViewModel
+@{ ViewData["Title"] = "Новая тема"; }
+<section class="form-panel"><a class="back-link" asp-action="Index">← Все темы</a><h1>Новая тема</h1>
+<form method="post"><div asp-validation-summary="ModelOnly" class="validation"></div>
+<label asp-for="Title">Название</label><input asp-for="Title" autofocus maxlength="150" /><span asp-validation-for="Title"></span>
+<label asp-for="Content">Содержание</label><textarea asp-for="Content" rows="9" maxlength="5000"></textarea><span asp-validation-for="Content"></span>
+<button type="submit">Опубликовать тему</button></form></section>

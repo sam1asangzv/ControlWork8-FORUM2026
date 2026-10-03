@@ -1,0 +1,8 @@
+@model Forum.ViewModels.TopicDetailsViewModel
+@{ ViewData["Title"] = Model.Topic.Title; }
+<a class="back-link" asp-action="Index">← Все темы</a>
+<article class="topic-detail"><div class="topic-meta"><span>@Model.Topic.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</span><a asp-controller="Profile" asp-action="Details" asp-route-id="@Model.Topic.AuthorId">@Model.Topic.Author.UserName</a></div><h1>@Model.Topic.Title</h1><p>@Model.Topic.Content</p></article>
+<section id="reply-section"><h2>Ответы</h2><partial name="_ReplyList" model="Model" /></section>
+@if (User.Identity?.IsAuthenticated == true) { <form id="reply-form" class="reply-form" method="post"><input type="hidden" name="topicId" value="@Model.Topic.Id" /><textarea name="content" rows="4" maxlength="2000" required placeholder="Ваш ответ"></textarea><button type="submit">Ответить</button><p class="form-status" role="status"></p></form> }
+else { <p class="login-prompt"><a asp-controller="Account" asp-action="Login">Войдите</a>, чтобы ответить.</p> }
+@section Scripts { <script src="~/js/forum.js" asp-append-version="true"></script> }

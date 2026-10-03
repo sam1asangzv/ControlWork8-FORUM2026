@@ -1,0 +1,16 @@
+@model Forum.ViewModels.TopicListViewModel
+@{ ViewData["Title"] = "Темы"; }
+<header class="page-heading"><div><p class="eyebrow">Обсуждения</p><h1>Темы форума</h1></div>@if(User.Identity?.IsAuthenticated == true){<a class="button" asp-action="Create">Создать тему</a>}</header>
+@if (!Model.Topics.Any()) { <section class="empty-state"><h2>Тем пока нет</h2><p>Начните первое обсуждение.</p></section> }
+else {
+<section class="topic-list" aria-label="Список тем">
+@foreach (var topic in Model.Topics) {
+    <a class="topic-row" asp-action="Details" asp-route-id="@topic.Id">
+        <div><h2>@topic.Title</h2><p>@topic.Content</p></div>
+        <dl><div><dt>Автор</dt><dd>@topic.Author.UserName</dd></div><div><dt>Создана</dt><dd>@topic.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</dd></div><div><dt>Ответов</dt><dd>@topic.Replies.Count</dd></div></dl>
+    </a>
+}
+</section>
+<nav class="pagination" aria-label="Страницы тем">
+@for (var p = 1; p <= Model.TotalPages; p++) { <a class="@(p == Model.Page ? "active" : "")" asp-route-page="@p">@p</a> }
+</nav> }

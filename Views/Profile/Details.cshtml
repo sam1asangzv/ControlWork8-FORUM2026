@@ -1,0 +1,3 @@
+@model Forum.Models.ApplicationUser
+@{ ViewData["Title"] = Model.UserName; }
+<section class="profile"><img src="@Model.AvatarPath" alt="Аватар @Model.UserName" /><div><p class="eyebrow">Участник форума</p><h1>@Model.UserName</h1><p>@Model.Email</p><dl><div><dt>Тем</dt><dd>@ViewBag.TopicCount</dd></div><div><dt>Сообщений</dt><dd>@ViewBag.MessageCount</dd></div></dl></div></section>
