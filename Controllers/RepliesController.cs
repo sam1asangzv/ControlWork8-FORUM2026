@@ -32,7 +32,7 @@ public class RepliesController(AppDbContext db) : Controller
         var count = await db.Replies.CountAsync(x => x.TopicId == topicId);
         var pages = Math.Max(1, (int)Math.Ceiling(count / (double)PageSize));
         page = Math.Clamp(page, 1, pages);
-        var replies = await db.Replies.AsNoTracking().Where(x => x.TopicId == topicId)
+        var replies = await db.Replies.Where(x => x.TopicId == topicId)
             .Include(x => x.Author).ThenInclude(x => x.Replies).Include(x => x.Votes)
             .OrderBy(x => x.CreatedAt).Skip((page - 1) * PageSize).Take(PageSize).ToListAsync();
         return PartialView("~/Views/Topics/_ReplyList.cshtml", new TopicDetailsViewModel

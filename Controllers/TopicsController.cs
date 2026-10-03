@@ -47,7 +47,7 @@ public class TopicsController(AppDbContext db) : Controller
         var count = await db.Replies.CountAsync(x => x.TopicId == id);
         var pages = Math.Max(1, (int)Math.Ceiling(count / (double)replyPageSize));
         page = Math.Clamp(page, 1, pages);
-        var replies = await db.Replies.AsNoTracking().Where(x => x.TopicId == id)
+        var replies = await db.Replies.Where(x => x.TopicId == id)
             .Include(x => x.Author).ThenInclude(x => x.Replies).Include(x => x.Votes).OrderBy(x => x.CreatedAt)
             .Skip((page - 1) * replyPageSize).Take(replyPageSize).ToListAsync();
         return View(new TopicDetailsViewModel { Topic = topic, Replies = replies, Page = page, TotalPages = pages, CurrentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) });
